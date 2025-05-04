@@ -1,0 +1,155 @@
+service: backend-sabbagg
+frameworkVersion: '4'
+
+plugins:
+  # - serverless-offline
+  - serverless-python-requirements
+
+useDotenv: true
+
+package:
+  patterns:
+    - "!./**"
+    - "handlers/**"
+    - "classes/**"
+    - "models/**"
+    - "tools/**"
+
+custom:
+  cors:
+    origin: "*"
+    headers:
+      - Accept
+      - Content-Type
+      - Access-Control-Allow-Origin
+      - Access-Control-Allow-Methods
+      - Access-Control-Allow-Headers
+      - Authorization
+
+  authorizer:
+    type: COGNITO_USER_POOLS
+    authorizerId: ${env:AUTHORIZER_ID}
+
+  pythonRequirements:
+    fileName: requirements.txt
+    layer: false
+    slim: true
+    strip: false
+    slimPatternsAppendDefaults: false
+    slimPatterns:
+      - boto3/**
+      - botocore/**
+      - s3transfer/**
+      - urllib3/**
+      - '*/.py[c|o]'
+      - '*/_pycache_'
+
+provider:
+  name: aws
+  runtime: python3.10
+  region: us-east-1
+
+  environment:
+    DATABASE_USER: ${env:DATABASE_USER}
+    DATABASE_PASSWORD: ${env:DATABASE_PASSWORD}
+    DATABASE_NAME: ${env:DATABASE_NAME}
+    DATABASE_HOST: ${env:DATABASE_HOST}
+    DATABASE_PORT: ${env:DATABASE_PORT}
+    CLIENT_ID: ${env:CLIENT_ID}
+    SECRET_HASH: ${env:SECRET_HASH}
+    AUTHORIZER_ID: ${env:AUTHORIZER_ID}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - cognito-idp:AdminSetUserPassword
+            - cognito-idp:AdminUpdateUserAttributes
+            - cognito-idp:GetUser
+          Resource: "*"
+
+functions:
+
+  Products:
+    name: Products
+    handler: handlers/Products.products
+    timeout: 29
+    events:
+      - http:
+          path: /products
+          method: post
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.authorizer}
+      - http:
+          path: /products
+          method: get
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.authorizer}
+      - http:
+          path: /products
+          method: put
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.authorizer}
+      - http:
+          path: /products
+          method: delete
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.authorizer}
+
+  Users:
+    name: Users
+    handler: handlers/Users.users
+    timeout: 29
+    events:
+      - http:
+          path: /auth/register
+          method: post
+          cors: ${self:custom.cors}
+
+  AuthUsers:
+    name: AuthUsers
+    handler: handlers/Users.auth_user
+    timeout: 29
+    events:
+      - http:
+          path: /auth/authenticate
+          method: post
+          cors: ${self:custom.cors}
+
+  Reauthenticate:
+    name: Reauthenticate
+    handler: handlers/Users.reauthenticate
+    timeout: 29
+    events:
+      - http:
+          path: /auth/reauthenticate
+          method: post
+          cors: ${self:custom.cors}
+
+  Purchases:
+    name: Purchases
+    handler: handlers/Purchases.purchases
+    timeout: 29
+    events:
+      - http:
+          path: /purchases
+          method: post
+          cors: ${self:custom.cors}
+      - http:
+          path: /purchases
+          method: get
+          cors: ${self:custom.cors}
+
+  Login:
+    name: Login
+    handler: handlers/Users.login
+    timeout: 29
+    events:
+      - http:
+          path: /login
+          method: post
+          cors: ${self:custom.cors}
+          
