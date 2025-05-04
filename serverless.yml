@@ -138,10 +138,12 @@ functions:
           path: /purchases
           method: post
           cors: ${self:custom.cors}
+          authorizer: ${self:custom.authorizer}
       - http:
           path: /purchases
           method: get
           cors: ${self:custom.cors}
+          authorizer: ${self:custom.authorizer}
 
   Login:
     name: Login

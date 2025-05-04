@@ -94,7 +94,7 @@ class Users:
                 insert(UsersRolesModel).values(
                     user_id=result_statement['user_id'],
                     role_id=2
-                ), 3
+                ), 1
             )
 
             result_statement.update({"message": "User was created."})
