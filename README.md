@@ -7,9 +7,9 @@ En este repositorio se encuentra el código de una serie de APIs que permiten ge
 
 1. Se utiliza el ecosistema de Amazon Web Services. Los servicios principales son:
 
-  - **Cognito:** para la gestión de usuarios.
-  - **MySQL y Amazon RDS:** como base de datos y para la persistencia de datos.
-  - **Aws Lambda:** se crearon APIs lambdas con python para la gestion de los microservicios.
+    - **Cognito:** para la gestión de usuarios.
+    - **MySQL y Amazon RDS:** como base de datos y para la persistencia de datos.
+    - **Aws Lambda:** se crearon APIs lambdas con python para la gestion de los microservicios.
 
 2. En las **validaciones de entrada de datos**, se verifican si los valores coinciden con el tipo de dato esperado.
 
