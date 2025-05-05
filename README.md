@@ -7,16 +7,59 @@ En este repositorio se encuentra el código de una serie de APIs que permiten ge
 
 1. Se utiliza el ecosistema de Amazon Web Services. Los servicios principales son:
 
-   - **Cognito:** para la gestión de usuarios.
-   - **MySQL y Amazon RDS:** como base de datos y para persistencia de datos.
-   - **Serverless y Python:** como marco de trabajo y lenguaje de programación principal.
-   - **Caching:** Redis para respuestas de **GET /products** con expiración e invalidación.
-   - **Validaciones de entrada de datos:** se realizan manualmente en el código, verificando si los datos requeridos llegan y cumplen con el tipo esperado.
-   - **Errores:** un decorador global captura los errores.
+  - **Cognito:** para la gestión de usuarios.
+  - **MySQL y Amazon RDS:** como base de datos y para la persistencia de datos.
+  - **Aws Lambda:** se crearon APIs lambdas con python para la gestion de los microservicios.
 
----
+2. En las **validaciones de entrada de datos**, se verifican si los valores coinciden con el tipo de dato esperado.
 
-## Instrucciones de instalación
+3. **Errores:** un decorador global captura los tipos de errores que se presentan, por ejemplo **OperationalError, ClientError, Exception** o errores customizados **CustomError**.
+
+4. **Serverless y Python:** como marco de trabajo y lenguaje de programación principal.
+
+5. **Caching:** se utiliza Redis para respuestas de **GET /products** con expiración e invalidación.
+
+## Explicación del diseño de la arquitectura
+
+Para el diseño de la arquitectura se hace uso de la sugerencia de la prueba: **Separación clara de capas: controladores, servicios, modelos**.
+En el presente proyecto se utilizan:
+- **Controladores (handlers):** se encargan de la gestión de las peticiones HTTP
+- **Servicios (classes):** se encargan de procesar los datos, registrar un usuario, autenticar, crear productos, interactuar con Cognito, Redis, o la base de datos a través de los modelos. 
+- **Modelos (models):** aquí se maneja el acceso a la base de datos, ejecutando los queries creados con **sqlalchemy** para la gestión de usuarios, productos y compras.
+
+#### Estructura de archivos:
+El proyecto serverless maneja la siguiente estructura:
+```bash
+.
+├── classes
+│   ├── Products.py
+│   ├── Purchases.py
+│   ├── Users.py
+├── handlers
+│   ├── Products.py
+│   ├── Purchases.py
+│   ├── Users.py
+├── models
+│   ├── ProductsModel.py
+│   ├── Purchases.py
+│   ├── Roles.py
+│   ├── Users.py
+│   ├── UsersRoles.py
+├── tools
+│   ├── AwsTools.py
+│   ├── Database.py
+│   ├── FunctionsTools.py
+│   ├── RedisTools.py
+├── .gitignore
+├── README.md
+├── package-lock.json
+├── package.json
+├── requirements.txt
+├── serverless.yml
+```
+> La carpeta **tools** tiene clases y funciones que sirven para la conexión a la base de datos, ejecutar funciones de **boto3** para interactuar con Cognito, funciones para formatear datos, validar permisos, y ejecutar funciones para interactuar con Redis.
+
+## Instrucciones de instalación y ejecución de pruebas
 
 El proyecto puede probarse de dos formas:
 
@@ -31,22 +74,16 @@ Registra un nuevo usuario en AWS Cognito y lo guarda en la base de datos como cl
 - `password` (string, obligatorio)  
 - `email` (string, obligatorio, se usará para la autenticación del usuario)
 
----
-
 #### **POST /auth/authenticate**
 Verifica al usuario con el código de 6 dígitos enviado al email registrado. Requiere:
 
 - `username` (string, obligatorio)  
 - `code` (string, obligatorio)
 
----
-
 #### **POST /auth/reauthenticate**
 Solicita un nuevo código si el anterior expiró. Requiere:
 
 - `username` (string, obligatorio)
-
----
 
 #### **POST /login**
 Devuelve el `IdToken` necesario para acceder a endpoints protegidos. Requiere:
@@ -56,18 +93,14 @@ Devuelve el `IdToken` necesario para acceder a endpoints protegidos. Requiere:
 
 > **Nota:** el usuario debe haberse autenticado previamente con `/auth/authenticate`.
 
----
-
 #### **POST /create_admin**
 Convierte un usuario existente en administrador. Solo puede ser ejecutado por otro admin autenticado.  
 Requiere el header `Authorization` con el `IdToken` válido.
 
----
 
 #### **POST /products**
 Crea un nuevo producto. Solo disponible para administradores.
 
----
 
 #### **GET /products**
 Lista productos. Soporta filtros opcionales:
@@ -75,22 +108,18 @@ Lista productos. Soporta filtros opcionales:
 - `product_id`  
 - `category`
 
----
 
 #### **PUT /products**
 Actualiza un producto existente. Solo para administradores.
 
----
 
 #### **DELETE /products**
 Elimina (desactiva) un producto. No se borra de la base de datos, solo se marca como `active = 0`.
 
----
 
 #### **POST /purchases**
 Registra una compra. Solo accesible para usuarios autenticados con rol de cliente.
 
----
 
 #### **GET /purchases**
 Lista de compras. Soporta filtros opcionales:
@@ -98,7 +127,6 @@ Lista de compras. Soporta filtros opcionales:
 - `product_id`  
 - `user_id`
 
----
 
 ### 2. Deploy con Serverless en AWS
 

@@ -156,19 +156,19 @@ def response(statusCode, data=[], message=''):
 
 def read_exception_message():
 
-    exception_type, exception_object, exception_stack = sys.exc_info()
+    type, object, stack = sys.exc_info()
 
-    last_trace = traceback.extract_tb(exception_stack)[-1]
+    last_trace = traceback.extract_tb(stack)[-1]
     filename, line, function, code = last_trace
 
     path = filename.split("\\")[-2::]
 
-    print(f"""
+    print(f'''
         line: {line},
         function: {function},
         code: {code},
         path: {path}
-    """)
+    ''')
 
 
 def validate_permissions(roles: list):
