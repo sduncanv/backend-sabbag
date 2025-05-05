@@ -7,7 +7,7 @@ En este repositorio se encuentra el código de una serie de APIs que permiten ge
 
 1. Se utiliza el ecosistema de Amazon Web Services. Los servicios principales son:
 
-    - **Cognito:** para la gestión de usuarios.
+    - **Cognito:** para la creación y autenticación de usuarios.
     - **MySQL y Amazon RDS:** como base de datos y para la persistencia de datos.
     - **Aws Lambda:** se crearon APIs lambdas con python para la gestion de los microservicios.
 
@@ -25,7 +25,12 @@ Para el diseño de la arquitectura se hace uso de la sugerencia de la prueba: **
 En el presente proyecto se utilizan:
 - **Controladores (handlers):** se encargan de la gestión de las peticiones HTTP
 - **Servicios (classes):** se encargan de procesar los datos, registrar un usuario, autenticar, crear productos, interactuar con Cognito, Redis, o la base de datos a través de los modelos. 
-- **Modelos (models):** aquí se maneja el acceso a la base de datos, ejecutando los queries creados con **sqlalchemy** para la gestión de usuarios, productos y compras.
+- **Modelos (models):** aquí se maneja el acceso a la base de datos, ejecutando los queries creados con **sqlalchemy** para la gestión de usuarios, productos y compras. Se tienen los siguientes models:
+  - **users**: guarda la información de los usuarios
+  - **roles**: guarda los tipos de usuarios que puede existir: admin, cliente
+  - **users_roles**: guarda la relación de un usuario con el rol/tipo de usuario
+  - **products**: guarda la información de los productos creados
+  - **purchases**: guarda la información de las compras que se realizan
 
 #### Estructura de archivos:
 El proyecto serverless maneja la siguiente estructura:
