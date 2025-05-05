@@ -90,10 +90,11 @@ class Users:
 
             result_statement = self.db.run_statement(statement, 1)
 
+            CUSTOMER_ROLE_ID = 2
             self.db.run_statement(
                 insert(UsersRolesModel).values(
                     user_id=result_statement['user_id'],
-                    role_id=2
+                    role_id=CUSTOMER_ROLE_ID
                 ), 1
             )
 
@@ -236,5 +237,53 @@ class Users:
             raise CustomError(
                 message=data, status_code=status_code
             )
+
+        return {'statusCode': status_code, 'data': data}
+
+    def create_admin(self, event):
+
+        data = get_event_data(event)
+        user_id = data.get('user_id', '')
+
+        values = [
+            ['user_id', int, user_id]
+        ]
+
+        is_valid = validate_event_data(values)
+        if not is_valid['is_valid']:
+            raise CustomError(is_valid['errors'][0], 400)
+
+        username = self.db.run_statement(
+            select(UsersModel).where(
+                UsersModel.active == 1,
+                UsersModel.user_id == user_id,
+            ), 2
+        )
+
+        if not username:
+            raise CustomError("User does'n exists.", 400)
+
+        ADMIN_ROLE_ID = 1
+        statement = update(UsersRolesModel).where(
+            UsersRolesModel.user_id == user_id,
+            UsersRolesModel.active == 1
+        ).values(
+            role_id=ADMIN_ROLE_ID
+        )
+
+        result = self.client_cognito.admin_update_user_attributes(
+            UserPoolId=os.getenv('USER_POOL_ID'),
+            Username=username[0]['username'],
+            UserAttributes=[
+                {'Name': 'custom:role', 'Value': str(1)}
+            ]
+        )
+
+        status_code = result['ResponseMetadata']['HTTPStatusCode']
+        data = result
+
+        if status_code == 200:
+            self.db.run_statement(statement, 3)
+            data = {"message": "Admin was created."}
 
         return {'statusCode': status_code, 'data': data}

@@ -58,6 +58,7 @@ provider:
     CLIENT_ID: ${env:CLIENT_ID}
     SECRET_HASH: ${env:SECRET_HASH}
     AUTHORIZER_ID: ${env:AUTHORIZER_ID}
+    USER_POOL_ID: ${env:USER_POOL_ID}
 
   iam:
     role:
@@ -96,6 +97,17 @@ functions:
       - http:
           path: /products
           method: delete
+          cors: ${self:custom.cors}
+          authorizer: ${self:custom.authorizer}
+
+  CreateAdmin:
+    name: CreateAdmin
+    handler: handlers/Users.create_admin
+    timeout: 29
+    events:
+      - http:
+          path: /create_admin
+          method: post
           cors: ${self:custom.cors}
           authorizer: ${self:custom.authorizer}
 

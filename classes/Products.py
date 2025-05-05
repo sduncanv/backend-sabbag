@@ -34,14 +34,21 @@ class Products:
         data = [
             ['name', str, name],
             ['price', float, price],
-            ['category', str, category],
-            ['quantity', int, quantity],
+            ['quantity', int, quantity]
         ]
+
+        if category:
+            data.append(['category', str, category])
 
         is_valid = validate_event_data(data)
 
         if not is_valid['is_valid']:
             raise CustomError(is_valid['errors'][0], 400)
+
+        if len(name) < 3:
+            raise CustomError(
+                "The name must be at least 3 characters long.", 400
+            )
 
         statement = insert(ProductModel).values(
             name=name,
