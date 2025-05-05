@@ -59,7 +59,7 @@ class Products:
 
         self.redis.delete_key("products-get-*")
 
-        result_statement = self.db.run_insert(statement, 1)
+        result_statement = self.db.run_insert(statement)
 
         return {'statusCode': 201, 'data': result_statement}
 

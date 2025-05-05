@@ -182,15 +182,13 @@ class Users:
 
         status_code = result['ResponseMetadata']['HTTPStatusCode']
         data = result
-        message = 'Code not sent.'
 
         if status_code == 200:
-            message = 'Code sent.'
+            data = 'Code sent.'
 
         return {
             'statusCode': status_code,
-            'data': data,
-            'message': message
+            'data': data
         }
 
     def login(self, event):

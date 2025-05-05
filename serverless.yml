@@ -59,6 +59,10 @@ provider:
     SECRET_HASH: ${env:SECRET_HASH}
     AUTHORIZER_ID: ${env:AUTHORIZER_ID}
     USER_POOL_ID: ${env:USER_POOL_ID}
+    REDIS_HOST: ${env:REDIS_HOST}
+    REDIS_PORT: ${env:REDIS_PORT}
+    REDIS_USERNAME: ${env:REDIS_USERNAME}
+    USER_POOL_ID: ${env:USER_POOL_ID}
 
   iam:
     role:
