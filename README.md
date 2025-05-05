@@ -2,6 +2,11 @@
 
 En este repositorio se encuentra el código de una serie de APIs que permiten gestionar productos, usuarios y compras. Dependiendo del rol del usuario (Admin o Cliente), puede ejecutar las APIs a las que tenga acceso.
 
+> **Note**
+>
+> En el archivo de Postman, en el body de la API **/login** se encuentran las credenciales de un usuario con rol de administrador preexistente. Este usuario es el único admin cargado inicialmente, ya que las demás tablas están vacías. Es necesario autenticarse con este usuario para poder crear nuevos administradores, ya que solo un admin puede otorgar ese rol.
+
+
 ## Decisiones técnicas
 
 1. Se utiliza el ecosistema de Amazon Web Services. Los servicios principales son:
