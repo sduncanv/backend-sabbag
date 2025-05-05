@@ -1,5 +1,5 @@
 from sqlalchemy.sql.functions import current_timestamp
-from sqlalchemy import String, Column, DateTime, Integer
+from sqlalchemy import Column, DateTime, Integer
 
 from tools.Database import Base
 

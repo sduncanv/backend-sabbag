@@ -1,6 +1,6 @@
 import os
-import sys
 import jwt
+import sys
 import json
 import traceback
 from botocore.exceptions import ClientError

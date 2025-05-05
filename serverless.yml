@@ -154,4 +154,3 @@ functions:
           path: /login
           method: post
           cors: ${self:custom.cors}
-          
