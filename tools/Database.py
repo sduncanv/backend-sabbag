@@ -5,10 +5,6 @@ from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
-IS_A_INSERT_STATEMENT = 1
-IS_A_SELECT_STATEMENT = 2
-IS_A_UPDATE_STATEMENT = 3
-
 
 class Database:
 
@@ -31,38 +27,37 @@ class Database:
 
         return consult
 
-    def run_statement(
-        self, statement, type_statement: int
-    ):
+    def run_insert(self, statement):
 
         consult = self.execute_statement(statement)
-        result = None
+        result = consult.inserted_primary_key._asdict()
+        return result
 
-        if type_statement == IS_A_INSERT_STATEMENT:
-            result = consult.inserted_primary_key._asdict()
+    def run_select(self, statement):
 
-        elif type_statement == IS_A_SELECT_STATEMENT:
-            format_result = []
+        consult = self.execute_statement(statement)
+        format_result = []
 
-            for row in consult:
-                format_row = {}
+        for row in consult:
+            format_row = {}
 
-                for key, val in row._mapping.items():
+            for key, val in row._mapping.items():
 
-                    if isinstance(val, Decimal):
-                        format_row[key] = float(val)
+                if isinstance(val, Decimal):
+                    format_row[key] = float(val)
 
-                    elif isinstance(val, datetime):
-                        format_row[key] = val.strftime("%Y-%m-%d %H:%M:%S")
+                elif isinstance(val, datetime):
+                    format_row[key] = val.strftime("%Y-%m-%d %H:%M:%S")
 
-                    else:
-                        format_row[key] = val
+                else:
+                    format_row[key] = val
 
-                format_result.append(format_row)
+            format_result.append(format_row)
 
-            result = format_result
+        return format_result
 
-        elif type_statement == IS_A_UPDATE_STATEMENT:
-            result = consult.last_updated_params()
+    def run_update(self, statement):
 
+        consult = self.execute_statement(statement)
+        result = consult.last_updated_params()
         return result

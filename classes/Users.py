@@ -58,7 +58,7 @@ class Users:
             )
         )
 
-        user_exists = self.db.run_statement(statement, 2)
+        user_exists = self.db.run_select(statement)
         if user_exists:
             raise CustomError('Username or email already exists.', 400)
 
@@ -88,14 +88,14 @@ class Users:
                 password=password
             )
 
-            result_statement = self.db.run_statement(statement, 1)
+            result_statement = self.db.run_insert(statement)
 
             CUSTOMER_ROLE_ID = 2
-            self.db.run_statement(
+            self.db.run_insert(
                 insert(UsersRolesModel).values(
                     user_id=result_statement['user_id'],
                     role_id=CUSTOMER_ROLE_ID
-                ), 1
+                )
             )
 
             result_statement.update({"message": "User was created."})
@@ -152,7 +152,7 @@ class Users:
                 is_authenticated=1
             )
 
-            data = self.db.run_statement(statement, 3)
+            data = self.db.run_update(statement)
             message = 'User authenticated.'
 
         return {
@@ -214,7 +214,7 @@ class Users:
             UsersModel.username == username
         )
 
-        user_exists = self.db.run_statement(statement, 2)
+        user_exists = self.db.run_select(statement)
         if not user_exists:
             raise CustomError("Username does'n exists.", 400)
 
@@ -253,11 +253,11 @@ class Users:
         if not is_valid['is_valid']:
             raise CustomError(is_valid['errors'][0], 400)
 
-        username = self.db.run_statement(
+        username = self.db.run_select(
             select(UsersModel).where(
                 UsersModel.active == 1,
                 UsersModel.user_id == user_id,
-            ), 2
+            )
         )
 
         if not username:
@@ -283,7 +283,7 @@ class Users:
         data = result
 
         if status_code == 200:
-            self.db.run_statement(statement, 3)
+            self.db.run_update(statement)
             data = {"message": "Admin was created."}
 
         return {'statusCode': status_code, 'data': data}

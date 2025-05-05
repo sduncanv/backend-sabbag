@@ -2,7 +2,6 @@
 
 En este repositorio se encuentra el código de una serie de APIs que permiten gestionar productos, usuarios y compras. Dependiendo del rol del usuario (Admin o Cliente), puede ejecutar las APIs a las que tenga acceso.
 
-
 ## Decisiones técnicas
 
 1. Se utiliza el ecosistema de Amazon Web Services. Los servicios principales son:

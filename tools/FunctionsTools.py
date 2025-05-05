@@ -206,7 +206,7 @@ def validate_permissions(roles: list):
                 UsersModel.username == username
             )
 
-            result = database.run_statement(statement, 2)
+            result = database.run_select(statement)
 
             user_role = result[0]['role_id']
 

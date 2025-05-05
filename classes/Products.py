@@ -2,7 +2,7 @@ import os
 import json
 from sqlalchemy import select, insert, update
 
-from models.ProductsModel import ProductModel
+from models.Products import ProductModel
 from tools.RedisTools import RedisTools
 from tools.Database import Database
 from tools.FunctionsTools import (
@@ -59,7 +59,7 @@ class Products:
 
         self.redis.delete_key("products-get-*")
 
-        result_statement = self.db.run_statement(statement, 1)
+        result_statement = self.db.run_insert(statement, 1)
 
         return {'statusCode': 201, 'data': result_statement}
 
@@ -112,7 +112,7 @@ class Products:
 
             statement = statement.offset(offset)
 
-        result_statement = self.db.run_statement(statement, 2)
+        result_statement = self.db.run_select(statement)
 
         if not result_statement:
             status_code = 404
@@ -136,16 +136,12 @@ class Products:
 
         if product_id:
 
-            # product_found = self.get_product(
-            #     {'queryStringParameters': {'product_id': product_id}}
-            # )
-
             statement = select(ProductModel).where(
                 ProductModel.active == 1,
                 ProductModel.product_id == product_id
             )
 
-            product_found = self.db.run_statement(statement, 2)
+            product_found = self.db.run_select(statement)
 
             if not product_found:
                 raise CustomError("Product doesn't exist.", 404)
@@ -174,7 +170,7 @@ class Products:
             ProductModel.active == 1
         ).values(**to_update)
 
-        result_statement = self.db.run_statement(statement, 3)
+        result_statement = self.db.run_update(statement)
 
         if result_statement:
             self.redis.delete_key("products-get-*")
@@ -215,7 +211,7 @@ class Products:
             *conditions
         ).values(active=0)
 
-        result_statement = self.db.run_statement(statement, 3)
+        result_statement = self.db.run_update(statement)
 
         if result_statement:
             self.redis.delete_key("products-get-*")

@@ -5,7 +5,7 @@ from sqlalchemy import select, insert, update
 from classes.Products import Products
 from models.Users import UsersModel
 from models.Purchases import PurchasesModel
-from models.ProductsModel import ProductModel
+from models.Products import ProductModel
 from tools.Database import Database
 from tools.FunctionsTools import (
     get_event_data, validate_event_data, CustomError
@@ -51,7 +51,7 @@ class Purchases:
             UsersModel.user_id == user_id
         )
 
-        user_found = self.db.run_statement(statement, 2)
+        user_found = self.db.run_select(statement)
         if not user_found:
             raise CustomError('User not found.', 404)
 
@@ -60,7 +60,7 @@ class Purchases:
             ProductModel.product_id == product_id
         )
 
-        product_found = self.db.run_statement(statement, 2)
+        product_found = self.db.run_select(statement)
         if not product_found:
             raise CustomError('Product not found.', 404)
 
@@ -74,19 +74,19 @@ class Purchases:
             user_id=user_id, product_id=product_id
         )
 
-        result_statement = self.db.run_statement(statement, 1)
+        result_statement = self.db.run_insert(statement)
 
         to_update = {'quantity': quantity - 1}
 
         if quantity == 1:
             to_update['in_stock'] = 0
 
-        self.db.run_statement(
+        self.db.run_update(
             update(ProductModel).where(
                 ProductModel.product_id == product_id
             ).values(
                 **to_update
-            ), 3
+            )
         )
         status_code = 201
 
@@ -110,7 +110,7 @@ class Purchases:
             *conditions
         )
 
-        result_statement = self.db.run_statement(statement, 2)
+        result_statement = self.db.run_select(statement)
         status_code = 200
 
         if not result_statement:
