@@ -17,6 +17,8 @@ class Users:
 
     def __init__(self) -> None:
 
+        print('Classs')
+
         self.client_id = os.getenv('CLIENT_ID')
         self.secret_hash = os.getenv('SECRET_HASH')
         self.db = Database(
