@@ -78,88 +78,88 @@ provider:
 
 functions:
 
-  Products:
-    name: Products
-    handler: handlers/Products.products
-    timeout: 29
-    events:
-      - http:
-          path: /products
-          method: post
-          cors: ${self:custom.cors}
-          authorizer: ${self:custom.authorizer}
-      - http:
-          path: /products
-          method: get
-          cors: ${self:custom.cors}
-          authorizer: ${self:custom.authorizer}
-      - http:
-          path: /products
-          method: put
-          cors: ${self:custom.cors}
-          authorizer: ${self:custom.authorizer}
-      - http:
-          path: /products
-          method: delete
-          cors: ${self:custom.cors}
-          authorizer: ${self:custom.authorizer}
+  # Products:
+  #   name: Products
+  #   handler: handlers/Products.products
+  #   timeout: 29
+  #   events:
+  #     - http:
+  #         path: /products
+  #         method: post
+  #         cors: ${self:custom.cors}
+  #         authorizer: ${self:custom.authorizer}
+  #     - http:
+  #         path: /products
+  #         method: get
+  #         cors: ${self:custom.cors}
+  #         authorizer: ${self:custom.authorizer}
+  #     - http:
+  #         path: /products
+  #         method: put
+  #         cors: ${self:custom.cors}
+  #         authorizer: ${self:custom.authorizer}
+  #     - http:
+  #         path: /products
+  #         method: delete
+  #         cors: ${self:custom.cors}
+  #         authorizer: ${self:custom.authorizer}
 
-  CreateAdmin:
-    name: CreateAdmin
-    handler: handlers/Users.create_admin
-    timeout: 29
-    events:
-      - http:
-          path: /create_admin
-          method: post
-          cors: ${self:custom.cors}
-          authorizer: ${self:custom.authorizer}
+  # CreateAdmin:
+  #   name: CreateAdmin
+  #   handler: handlers/Users.create_admin
+  #   timeout: 29
+  #   events:
+  #     - http:
+  #         path: /create_admin
+  #         method: post
+  #         cors: ${self:custom.cors}
+  #         authorizer: ${self:custom.authorizer}
 
-  Users:
-    name: Users
-    handler: handlers/Users.users
-    timeout: 29
-    events:
-      - http:
-          path: /auth/register
-          method: post
-          cors: ${self:custom.cors}
+  # Users:
+  #   name: Users
+  #   handler: handlers/Users.users
+  #   timeout: 29
+  #   events:
+  #     - http:
+  #         path: /auth/register
+  #         method: post
+  #         cors: ${self:custom.cors}
 
-  AuthUsers:
-    name: AuthUsers
-    handler: handlers/Users.auth_user
-    timeout: 29
-    events:
-      - http:
-          path: /auth/authenticate
-          method: post
-          cors: ${self:custom.cors}
+  # AuthUsers:
+  #   name: AuthUsers
+  #   handler: handlers/Users.auth_user
+  #   timeout: 29
+  #   events:
+  #     - http:
+  #         path: /auth/authenticate
+  #         method: post
+  #         cors: ${self:custom.cors}
 
-  Reauthenticate:
-    name: Reauthenticate
-    handler: handlers/Users.reauthenticate
-    timeout: 29
-    events:
-      - http:
-          path: /auth/reauthenticate
-          method: post
-          cors: ${self:custom.cors}
+  # Reauthenticate:
+  #   name: Reauthenticate
+  #   handler: handlers/Users.reauthenticate
+  #   timeout: 29
+  #   events:
+  #     - http:
+  #         path: /auth/reauthenticate
+  #         method: post
+  #         cors: ${self:custom.cors}
 
-  Purchases:
-    name: Purchases
-    handler: handlers/Purchases.purchases
-    timeout: 29
-    events:
-      - http:
-          path: /purchases
-          method: post
-          cors: ${self:custom.cors}
-          authorizer: ${self:custom.authorizer}
-      - http:
-          path: /purchases
-          method: get
-          cors: ${self:custom.cors}
-          authorizer: ${self:custom.authorizer}
+  # Purchases:
+  #   name: Purchases
+  #   handler: handlers/Purchases.purchases
+  #   timeout: 29
+  #   events:
+  #     - http:
+  #         path: /purchases
+  #         method: post
+  #         cors: ${self:custom.cors}
+  #         authorizer: ${self:custom.authorizer}
+  #     - http:
+  #         path: /purchases
+  #         method: get
+  #         cors: ${self:custom.cors}
+  #         authorizer: ${self:custom.authorizer}
 
   Login:
     name: Login
